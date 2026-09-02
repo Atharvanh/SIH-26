@@ -13,3 +13,6 @@
 1. Navigate to the `frontend` directory: `cd frontend`
 2. Install dependencies: `npm install`
 3. Run the development server: `npm run dev`
+
+## Data Setup
+Download the historical dataset from https://www.kaggle.com/datasets/anishaman07/agmarknet-india-commodity-prices-oct24-aug25 and place it at `backend/data/historical_prices.csv` before running ingestion.
