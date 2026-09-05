@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Query
-from app.services.forecast_service import get_price_series, prepare_series, train_and_forecast
+from app.services.forecast_service import (
+    get_price_series, prepare_series, train_and_forecast,
+    naive_baseline_mape, check_fill_ratio,
+)
 
 router = APIRouter(prefix="/api", tags=["forecast"])
 
@@ -26,7 +29,11 @@ def get_forecast(
     if result is None:
         return {"error": f"Forecasting failed: {err}"}
 
-    # Step 4: Compute trend summary from last 30 days of historical data
+    # Step 4: Diagnostics
+    result["naive_baseline_mape"] = naive_baseline_mape(prepared)
+    result["test_period_fill_ratio"] = check_fill_ratio(raw_series, prepared)
+
+    # Step 5: Compute trend summary from last 30 days of historical data
     historical = result["historical"]
     trend_summary = _compute_trend_summary(historical)
 

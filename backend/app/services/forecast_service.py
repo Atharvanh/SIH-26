@@ -193,3 +193,57 @@ def train_and_forecast(series, forecast_days=7):
         "forecast": forecast,
         "backtested_mape": round(mape, 2) if mape is not None else None,
     }, None
+
+
+def naive_baseline_mape(series, test_size=14):
+    """
+    Compute MAPE for a naive persistence baseline: predict each test day's
+    price as the actual price from exactly 1 day before it.
+    Uses the same train/test split as train_and_forecast.
+    """
+    if len(series) <= test_size + 1:
+        return None
+
+    test = series[-test_size:]
+
+    # For each test day, the naive prediction is the actual value from the day before
+    # The day before the first test day is the last training day
+    naive_preds = series[-(test_size + 1):-1].values
+    actual = test.values
+
+    mask = actual != 0
+    if mask.sum() == 0:
+        return None
+
+    mape = float(np.mean(np.abs((actual[mask] - naive_preds[mask]) / actual[mask])) * 100)
+    return round(mape, 2)
+
+
+def check_fill_ratio(raw_series, prepared_series, test_days=14):
+    """
+    For the last `test_days` of the prepared series, report how many values
+    were real observations vs forward-filled.
+    """
+    if prepared_series is None or len(prepared_series) < test_days:
+        return None
+
+    # Get the last test_days dates from the prepared series
+    test_dates = prepared_series.index[-test_days:]
+
+    # The raw_series index has the actual observed dates
+    raw_dates = set(raw_series.index)
+
+    real_count = 0
+    filled_count = 0
+    for dt in test_dates:
+        if dt in raw_dates:
+            real_count += 1
+        else:
+            filled_count += 1
+
+    return {
+        "test_days": test_days,
+        "real_observations": real_count,
+        "forward_filled": filled_count,
+        "description": f"{filled_count} of {test_days} days were forward-filled, {real_count} were real observations",
+    }
