@@ -75,6 +75,12 @@ def prepare_series(series):
     if len(daily) < 14:
         return None, f"Not enough data after cleaning: {len(daily)} days"
 
+    # Ensure contiguous daily index with explicit freq for statsmodels
+    daily = daily.asfreq("D")
+    # If asfreq introduced NaNs in interior gaps, forward-fill them
+    if daily.isna().any():
+        daily = daily.ffill()
+
     return daily, None
 
 
