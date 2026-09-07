@@ -2,6 +2,10 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.models.mandi_price import Base
+from app.models.lot import Lot
+from app.models.offer import Offer
+from app.models.logistics import Logistics
+from app.models.dispute import Dispute
 
 # Resolve the path to the SQLite database file
 DB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
