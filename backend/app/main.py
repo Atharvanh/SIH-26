@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import health, mandi, diagnostics, forecast, sale_window
+from .routes import health, mandi, diagnostics, forecast, sale_window, buyer_match
 
 app = FastAPI(title="AgriEdge API")
 
@@ -22,3 +22,4 @@ app.include_router(mandi.router)
 app.include_router(diagnostics.router)
 app.include_router(forecast.router)
 app.include_router(sale_window.router)
+app.include_router(buyer_match.router)

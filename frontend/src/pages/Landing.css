@@ -1,0 +1,144 @@
+/* ============================================
+   Landing / Role-Select Page
+   ============================================ */
+
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+}
+
+.landing-content {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Brand */
+.landing-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.landing-icon {
+  font-size: 3rem;
+  line-height: 1;
+  animation: gentle-bob 3s ease-in-out infinite;
+}
+
+@keyframes gentle-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.landing-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 2.5rem;
+  letter-spacing: -0.03em;
+  color: var(--color-primary);
+}
+
+.landing-tagline {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--space-10);
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Role cards */
+.landing-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.role-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-6) var(--space-5);
+  background: var(--color-bg-card);
+  border: 2px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.role-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.role-card:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.role-card--farmer:hover,
+.role-card--farmer:focus-visible {
+  border-color: var(--color-primary);
+}
+
+.role-card--buyer:hover,
+.role-card--buyer:focus-visible {
+  border-color: var(--color-accent);
+}
+
+.role-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-bottom: var(--space-1);
+}
+
+.role-card--farmer .role-card-icon {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.role-card--buyer .role-card-icon {
+  background: var(--color-accent-subtle);
+  color: var(--color-accent-dark);
+}
+
+.role-card-label {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.role-card-desc {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  max-width: 260px;
+}
+
+/* Footer */
+.landing-footer {
+  margin-top: var(--space-12);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
