@@ -6,9 +6,27 @@ from app.models.lot import Lot
 from app.models.offer import Offer
 from app.models.logistics import Logistics
 from app.models.dispute import Dispute
-from app.schemas.transaction import OfferCreate, OfferResponse, OfferDetailResponse, OfferUpdateStatus
+from app.schemas.transaction import OfferCreate, OfferResponse, OfferDetailResponse, OfferUpdateStatus, OfferDashboardResponse
 
 router = APIRouter(tags=["offers"])
+
+@router.get("/api/offers", response_model=List[OfferDashboardResponse])
+def get_all_offers(status: str = None, db: Session = Depends(get_db)):
+    query = db.query(Offer)
+    if status:
+        query = query.filter(Offer.status == status)
+    offers = query.all()
+    
+    result = []
+    for offer in offers:
+        offer_dict = offer.__dict__.copy()
+        lot = db.query(Lot).filter(Lot.id == offer.lot_id).first()
+        logistics = db.query(Logistics).filter(Logistics.offer_id == offer.id).first()
+        offer_dict["lot"] = lot
+        offer_dict["logistics"] = logistics
+        result.append(offer_dict)
+    
+    return result
 
 @router.post("/api/lots/{lot_id}/offers", response_model=OfferResponse)
 def create_offer(lot_id: int, offer_in: OfferCreate, db: Session = Depends(get_db)):

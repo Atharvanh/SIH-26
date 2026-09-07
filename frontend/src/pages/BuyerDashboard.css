@@ -1,0 +1,134 @@
+/* ============================================
+   Buyer Dashboard Page
+   ============================================ */
+
+.buyer-dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  color: var(--color-text-secondary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.offers-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.offer-card {
+  padding: var(--space-4);
+}
+
+.offer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border-light);
+  padding-bottom: var(--space-3);
+}
+
+.offer-header h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.log-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.log-badge.requested {
+  background: var(--color-warning-subtle);
+  color: var(--color-warning);
+}
+
+.log-badge.scheduled {
+  background: var(--color-info-subtle);
+  color: var(--color-info);
+}
+
+.log-badge.in-transit {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.log-badge.delivered {
+  background: var(--color-success-subtle);
+  color: var(--color-success);
+}
+
+.offer-details {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.detail-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.detail-col .label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-col .val {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.offer-finances {
+  background: var(--color-bg);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.finance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.finance-row .label {
+  color: var(--color-text-secondary);
+}
+
+.finance-row .val {
+  font-weight: 600;
+}
+
+.finance-row.total {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--color-border);
+  font-size: 1rem;
+}
+
+.finance-row.total .val {
+  color: var(--color-positive);
+  font-weight: 700;
+}

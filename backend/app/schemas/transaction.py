@@ -70,6 +70,13 @@ class OfferDetailResponse(OfferResponse):
     class Config:
         from_attributes = True
 
+class OfferDashboardResponse(OfferResponse):
+    lot: "LotResponse"
+    logistics: Optional[LogisticsResponse] = None
+
+    class Config:
+        from_attributes = True
+
 # Lot Schemas
 class LotCreate(BaseModel):
     commodity: str

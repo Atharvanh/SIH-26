@@ -60,3 +60,8 @@ export const createDispute = async (offerId, reason) => {
   const response = await client.post(`/offers/${offerId}/disputes`, { reason });
   return response.data;
 };
+
+export const getAcceptedOffers = async () => {
+  const response = await client.get('/offers?status=ACCEPTED');
+  return response.data;
+};
