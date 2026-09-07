@@ -5,6 +5,7 @@ import FarmerDashboard from './pages/FarmerDashboard'
 import PriceIntel from './pages/PriceIntel'
 import CreateLot from './pages/CreateLot'
 import BuyerDashboard from './pages/BuyerDashboard'
+import OrderStatus from './pages/OrderStatus'
 
 export default function App() {
   return (
@@ -12,6 +13,9 @@ export default function App() {
       <Routes>
         {/* Landing — no shared layout (full-screen) */}
         <Route path="/" element={<Landing />} />
+
+        {/* Routes without Layout (no bottom tabs) */}
+        <Route path="/farmer/order/:offerId" element={<OrderStatus />} />
 
         {/* Farmer routes — shared layout with tab bar */}
         <Route element={<Layout />}>

@@ -30,3 +30,33 @@ export const matchBuyers = async (commodity, quantity_quintals, quality_grade, f
   });
   return response.data;
 };
+
+export const createLot = async (lotData) => {
+  const response = await client.post('/lots', lotData);
+  return response.data;
+};
+
+export const createOffer = async (lotId, offerData) => {
+  const response = await client.post(`/lots/${lotId}/offers`, offerData);
+  return response.data;
+};
+
+export const acceptOffer = async (offerId) => {
+  const response = await client.patch(`/offers/${offerId}`, { status: 'ACCEPTED' });
+  return response.data;
+};
+
+export const getOffer = async (offerId) => {
+  const response = await client.get(`/offers/${offerId}`);
+  return response.data;
+};
+
+export const updateLogistics = async (logisticsId, status) => {
+  const response = await client.patch(`/logistics/${logisticsId}`, { status });
+  return response.data;
+};
+
+export const createDispute = async (offerId, reason) => {
+  const response = await client.post(`/offers/${offerId}/disputes`, { reason });
+  return response.data;
+};

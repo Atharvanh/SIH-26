@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { matchBuyers } from '../api/client';
+import { matchBuyers, createLot, createOffer, acceptOffer } from '../api/client';
+import { useNavigate } from 'react-router-dom';
 import { AlertCircle, ChevronDown, ChevronUp, MapPin, Truck, Award, ShieldCheck, ShieldAlert, Shield } from 'lucide-react';
 import './CreateLot.css';
 
 const LOCATION_OPTIONS = [
-  { label: "Cabbage — Aralamoodu, Kerala", commodity: "Cabbage", lat: 8.3912, lon: 77.0620 },
-  { label: "Wheat — Raibareilly, Uttar Pradesh", commodity: "Wheat", lat: 26.2300, lon: 81.2400 },
-  { label: "Brinjal — Gondal, Gujarat", commodity: "Brinjal", lat: 21.9600, lon: 70.8000 }
+  { label: "Cabbage — Aralamoodu, Kerala", commodity: "Cabbage", lat: 8.3912, lon: 77.0620, state: "Kerala", market: "Aralamoodu" },
+  { label: "Wheat — Raibareilly, Uttar Pradesh", commodity: "Wheat", lat: 26.2300, lon: 81.2400, state: "Uttar Pradesh", market: "Raibareilly" },
+  { label: "Brinjal — Gondal, Gujarat", commodity: "Brinjal", lat: 21.9600, lon: 70.8000, state: "Gujarat", market: "Gondal(Veg.market Gondal)" }
 ];
 
 export default function CreateLot() {
+  const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] = useState(LOCATION_OPTIONS[0]);
   const [quantity, setQuantity] = useState(10);
   const [qualityGrade, setQualityGrade] = useState("A");
@@ -17,7 +19,9 @@ export default function CreateLot() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [matchResult, setMatchResult] = useState(null);
+  const [createdLotId, setCreatedLotId] = useState(null);
   const [expandedCards, setExpandedCards] = useState({});
+  const [acceptingBuyerId, setAcceptingBuyerId] = useState(null);
 
   const handleMatch = async (e) => {
     e.preventDefault();
@@ -27,6 +31,20 @@ export default function CreateLot() {
     setExpandedCards({});
     
     try {
+      // 1. Create the Lot in the backend
+      const lotData = {
+        commodity: selectedLocation.commodity,
+        quantity_quintals: parseFloat(quantity),
+        quality_grade: qualityGrade,
+        state: selectedLocation.state,
+        market: selectedLocation.market,
+        farmer_lat: selectedLocation.lat,
+        farmer_lon: selectedLocation.lon
+      };
+      const lot = await createLot(lotData);
+      setCreatedLotId(lot.id);
+
+      // 2. Find Best Buyers
       const data = await matchBuyers(
         selectedLocation.commodity,
         parseFloat(quantity),
@@ -37,9 +55,34 @@ export default function CreateLot() {
       setMatchResult(data);
     } catch (err) {
       console.error("API Error:", err);
-      setError("Failed to find buyers. Please try again.");
+      setError("Failed to process request. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAccept = async (buyer) => {
+    if (!createdLotId) return;
+    setAcceptingBuyerId(buyer.buyer_id);
+    try {
+      // a) Create Offer
+      const offerData = {
+        buyer_id: buyer.buyer_id,
+        buyer_name: buyer.name,
+        offered_price_per_quintal: buyer.offered_price_per_quintal,
+        net_realization_per_quintal: buyer.breakdown.net_realization_per_quintal
+      };
+      const offer = await createOffer(createdLotId, offerData);
+      
+      // b) Accept Offer
+      await acceptOffer(offer.id);
+      
+      // c) Navigate to Order Status
+      navigate(`/farmer/order/${offer.id}`);
+    } catch (err) {
+      console.error("Acceptance Error:", err);
+      setError("Failed to accept offer. Please try again.");
+      setAcceptingBuyerId(null);
     }
   };
 
@@ -100,7 +143,7 @@ export default function CreateLot() {
         </div>
 
         <button type="submit" className="btn-primary" disabled={loading}>
-          {loading ? "Finding Buyers..." : "Find Best Buyers"}
+          {loading ? "Processing..." : "Find Best Buyers"}
         </button>
       </form>
 
@@ -207,6 +250,14 @@ export default function CreateLot() {
                         </div>
                       </div>
                     )}
+                    
+                    <button 
+                      className="btn-primary accept-btn" 
+                      onClick={() => handleAccept(buyer)}
+                      disabled={acceptingBuyerId !== null}
+                    >
+                      {acceptingBuyerId === buyer.buyer_id ? "Accepting..." : "Accept This Offer"}
+                    </button>
                   </div>
                 ))}
               </div>
